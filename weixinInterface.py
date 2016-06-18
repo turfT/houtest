@@ -22,6 +22,7 @@ class WeixinInterface:
         self.render = web.template.render(self.templates_root)
 
 def POST(self): 
+    return self.render.reply_text(fromUser,toUser,int(time.time()), "a")
     str_xml = web.data() #获得post来的数据 
     xml = etree.fromstring(str_xml)#进行XML解析 
     msgType=xml.find("MsgType").text 
