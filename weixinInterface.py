@@ -19,11 +19,11 @@ def weather(city="珠海"):
     r = requests.get('http://wthrcdn.etouch.cn/weather_mini?city='+city)
     data=r.json().get("data").get("forecast")
     
-    forecast=map(lambda x :(x.get("date").encode("utf-8"),
-                x.get("high").encode("utf-8"), x.get("low").encode("utf-8"),
-                x.get("type").encode("utf-8")),data)
+    forecast=map(lambda x :(x.get("date"),
+                x.get("high"), x.get("low"),
+                x.get("type")),data)
     
-    
+    #forecast=forecast[-1]
     forecast=map(lambda x: str(x[0])+":"+str(x[1])+"  "+
                 str(x[2])+ "  "+str(x[3]),forecast)
             
