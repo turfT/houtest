@@ -77,9 +77,9 @@ class WeixinInterface:
         else:
             content = xml.find("Content").text  # 获得用户所输入的内容
             if content[0:2] == u"天气":
-                city = str(content[2:])
-                city=filter(lambda x: x!=" ",city)
+                city = str(content[2:])               
                 try:
+                    city=filter(lambda x: x!=" ",city)
                     w=weather(city)
                     return self.render.reply_text(fromUser,toUser,int(time.time()), w)
                 except:self.render.reply_text(fromUser, toUser, int(time.time()),  '换个城市试试？')
