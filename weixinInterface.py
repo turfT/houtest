@@ -79,7 +79,7 @@ class WeixinInterface:
             if content[0:2] == u"天气":
                 try:
                     city = str(content[2:])               
-                    city=filter(lambda x: x!=" ",city)
+                    #city=filter(lambda x: x!=" ",city)
                     
                     return self.render.reply_text(fromUser,toUser,int(time.time()), city)
                     w=weather(city)
