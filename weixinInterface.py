@@ -15,7 +15,7 @@ import cxkd
 from imgtest import *
 
 
-def weather(city="珠海"):
+def weather(city):
     r = requests.get('http://wthrcdn.etouch.cn/weather_mini?city='+city)
     data=r.json().get("data").get("forecast")
     
@@ -27,7 +27,7 @@ def weather(city="珠海"):
     forecast=map(lambda x: str(x[0])+":"+str(x[1])+"  "+
                 str(x[2])+ "  "+str(x[3]),forecast)
     res=forecast[0]        
-    #res=city+":\n" +reduce(lambda x,y: x+"\n"+y,forecast)
+    res=city+":\n" +reduce(lambda x,y: x+"\n"+y,forecast)
     return res
     
 class WeixinInterface:
@@ -77,7 +77,8 @@ class WeixinInterface:
         else:
             content = xml.find("Content").text  # 获得用户所输入的内容
             if content[0:2] == u"天气":
-                city = str(content[2:].encode("utf-8"))  
+                city = str(content[2:].encode("utf-8")) 
+                city=filter(lambda x: x!=" ",city) 
                 try:
                     res=weather(city)             
                     return self.render.reply_text(fromUser,toUser,int(time.time()), res)
