@@ -14,6 +14,22 @@ import random
 import cxkd
 from imgtest import *
 
+
+def weather(city="珠海"):
+    r = requests.get('http://wthrcdn.etouch.cn/weather_mini?city='+city)
+    data=r.json().get("data").get("forecast")
+    
+    forecast=map(lambda x :(x.get("date").encode("utf-8"),
+                x.get("high").encode("utf-8"), x.get("low").encode("utf-8"),
+                x.get("type").encode("utf-8")),data)
+    
+    
+    forecast=map(lambda x: str(x[0])+":"+str(x[1])+"  "+
+                str(x[2])+ "  "+str(x[3]),forecast)
+            
+    res=city+":\n" +reduce(lambda x,y: x+"\n"+y,forecast)
+    return res
+    
 class WeixinInterface:
 
     def __init__(self):
@@ -60,25 +76,13 @@ class WeixinInterface:
                 return self.render.reply_text(fromUser, toUser, int(time.time()),  '识别失败，换张图片试试吧')
         else:
             content = xml.find("Content").text  # 获得用户所输入的内容
-            if content[0:2] == u"快递":
-                post = str(content[2:])
-                #result = cxkd.cxkd('PQ00708467161')
-
-                r = urllib2.urlopen('http://www.kuaidi100.com/autonumber/autoComNum?text='+post)
-                h = r.read()
-                k = eval(h)
-                kuaidi = k["auto"][0]['comCode']
-                '''
-                j = requests.get('http://www.kuaidi100.com/query?type=huitongkuaidi&postid=280472503105')
-                l = j.text
-                #l = j.read()
-                #m = eval(l)
-                #outcome = ''
-                #for c in m['data']:
-                '''
-                    #outcome = outcome + c['time']+'   '+c['context']+'\n'
-
-                return self.render.reply_text(fromUser,toUser,int(time.time()), kuaidi)
+            if content[0:2] == u"天气":
+                city = str(content[2:])
+                city=filter(lambda x: x!=" ",city)
+                try:
+                    w=weather(city)
+                    return self.render.reply_text(fromUser,toUser,int(time.time()), w)
+                except:self.render.reply_text(fromUser, toUser, int(time.time()),  '换个城市试试？')
 
             else:
                 return self.render.reply_text(fromUser,toUser,int(time.time()), content)
