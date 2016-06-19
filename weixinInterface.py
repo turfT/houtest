@@ -80,8 +80,9 @@ class WeixinInterface:
                 try:
                     city = str(content[2:])               
                     city=filter(lambda x: x!=" ",city)
+                    
+                    return self.render.reply_text(fromUser,toUser,int(time.time()), city)
                     w=weather(city)
-                    return self.render.reply_text(fromUser,toUser,int(time.time()), w)
                 except:
                     return self.render.reply_text(fromUser, toUser, int(time.time()),  '换个城市试试？')
 
